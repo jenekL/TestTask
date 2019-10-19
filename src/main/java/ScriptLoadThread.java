@@ -21,6 +21,7 @@ public class ScriptLoadThread implements Runnable {
         for (Integer ind : dependencies) {
             List<Integer> depends = dependencyService.getByScriptId(ind)
                     .stream().map(DependenciesEntity::getDependencyId).collect(Collectors.toList());
+
             if (depends.size() > 0) {
                 Thread t = new Thread(new ScriptLoadThread(ind, depends, dependencyService));
                 threads.add(t);
@@ -31,7 +32,6 @@ public class ScriptLoadThread implements Runnable {
 //                } catch (InterruptedException e) {
 //                    e.printStackTrace();
 //                }
-
             } else {
                 System.out.println("script " + ind + " started with no dependencies");
             }

@@ -8,9 +8,13 @@ import java.util.stream.Collectors;
 public class Main {
     public static void main(String ...args){
         DependencyService dependencyService = ServiceFactory.getDependencyService();
-        List<Integer> dependencies = dependencyService.getByScriptId(1)
+
+        final int scriptId = 1;
+
+        List<Integer> dependencies = dependencyService.getByScriptId(scriptId)
                 .stream().map(DependenciesEntity::getDependencyId).collect(Collectors.toList());
-        Thread t = new Thread(new ScriptLoadThread(1, dependencies, dependencyService));
+
+        Thread t = new Thread(new ScriptLoadThread(scriptId, dependencies, dependencyService));
         t.start();
 
         try {
