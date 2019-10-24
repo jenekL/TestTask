@@ -12,16 +12,12 @@ class ScriptLoadHandlerTest {
     private ScriptLoadHandler scriptLoadHandler = new ScriptLoadHandler(new DataService());
 
     @Test
-    void mainLoad() {
-        scriptLoadHandler.startScript(1);
-    }
-
-    @Test
     void assertThrowException() {
         assertThrows(IndexOutOfBoundsException.class,
                 () -> scriptLoadHandler.startScript(
                         new VulnerabilityScript(2, new ArrayList<>(Arrays.asList(5, 6, 15)))
                 ));
+
     }
 
     @Test
@@ -34,5 +30,4 @@ class ScriptLoadHandlerTest {
                 )));
         assertEquals(exception.getMessage(), "out of array");
     }
-
 }
