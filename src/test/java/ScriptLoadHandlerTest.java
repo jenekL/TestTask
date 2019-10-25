@@ -1,5 +1,6 @@
 import entities.VulnerabilityScript;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -39,6 +40,18 @@ class ScriptLoadHandlerTest {
     @Test
     void shouldReturnNotNullList() {
         assertNotNull(scriptLoadHandler.start(7).toArray());
+    }
+
+    @RepeatedTest(3)
+    void shouldReturnSameValue() {
+        List<VulnerabilityScript> scripts = new ArrayList<>(
+                Arrays.asList(
+                        new VulnerabilityScript(12, new ArrayList<>()),
+                        new VulnerabilityScript(13, new ArrayList<>()),
+                        new VulnerabilityScript(6, new ArrayList<>(Arrays.asList(12, 13)))
+                        )
+        );
+        assertIterableEquals(scripts, scriptLoadHandler.start(6));
     }
 
     @ParameterizedTest
