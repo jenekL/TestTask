@@ -1,6 +1,8 @@
 import entities.VulnerabilityScript;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,12 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 class ScriptLoadHandlerTest {
-    private ScriptLoadHandler scriptLoadHandler;
-
-    @BeforeEach
-    void init() {
-        scriptLoadHandler = new ScriptLoadHandler(new DataService());
-    }
+    private ScriptLoadHandler scriptLoadHandler = new ScriptLoadHandler(new DataService());
 
     @Test
     void shouldReturnFullScriptList() {
@@ -41,26 +38,32 @@ class ScriptLoadHandlerTest {
 
     @Test
     void shouldReturnNotNullList() {
-        assertNotNull(scriptLoadHandler.start(1).toArray());
+        assertNotNull(scriptLoadHandler.start(7).toArray());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 6, 7})
+    void shouldReturnListWithLastElementEqualsArgument(int argument) {
+        final List<VulnerabilityScript> loadScripts = scriptLoadHandler.start(argument);
+        assertEquals(argument, loadScripts.get(loadScripts.size() - 1).getScriptId());
+    }
+
+    @Test
+    @DisplayName("ShouldReturnListWithSingleElement")
+    void shouldReturnSingletonList() {
+        assertEquals(1, scriptLoadHandler.start(7).size());
     }
 
     @Test
     void assertThrowException() {
         assertThrows(IndexOutOfBoundsException.class,
-                () -> scriptLoadHandler.startScript(
-                        new VulnerabilityScript(2, new ArrayList<>(Arrays.asList(5, 6, 15)))
-                ));
-
+                () -> scriptLoadHandler.start(20));
     }
 
     @Test
     void shouldThrowException() {
         Throwable exception = assertThrows(IndexOutOfBoundsException.class,
-                () -> scriptLoadHandler.startScript(
-                        new VulnerabilityScript(
-                                1,
-                                new ArrayList<>(Arrays.asList(5, 6, 15))
-                        )));
-        assertEquals(exception.getMessage(), "out of array");
+                () -> scriptLoadHandler.start(20));
+        assertEquals(exception.getMessage(), "not existing dependency");
     }
 }

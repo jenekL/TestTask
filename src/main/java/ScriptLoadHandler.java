@@ -13,25 +13,20 @@ public class ScriptLoadHandler {
         this.dataService = dataService;
     }
 
-    public void setDataService(DataService dataService) {
-        this.dataService = dataService;
-    }
-
     public List<VulnerabilityScript> start(int scriptId) {
         loadedScripts.clear();
         startScript(scriptId);
         return loadedScripts;
     }
 
-    public void startScript(int scriptId) {
-        loadedScripts.add(startScript(new VulnerabilityScript(
+    private void startScript(int scriptId) {
+        startScript(new VulnerabilityScript(
                 scriptId,
                 dataService.getDependencies(scriptId)
-        )));
+        ));
     }
 
-    public VulnerabilityScript startScript(VulnerabilityScript vulnerabilityScript) {
-
+    private void startScript(VulnerabilityScript vulnerabilityScript) {
 
         List<Integer> dependencies = vulnerabilityScript.getDependencies();
         for (int id : dependencies) {
@@ -39,6 +34,6 @@ public class ScriptLoadHandler {
         }
         log.info(vulnerabilityScript.getScriptId() + " started");
 
-        return vulnerabilityScript;
+        loadedScripts.add(vulnerabilityScript);
     }
 }

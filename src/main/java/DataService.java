@@ -35,7 +35,7 @@ public class DataService {
 
     public List<Integer> getDependencies(int scriptId){
         if(scriptId > dependencies.size()){
-           throw new IndexOutOfBoundsException("out of array");
+           throw new IndexOutOfBoundsException("not existing dependency");
         }
         else {
             return dependencies.get(scriptId - 1);
